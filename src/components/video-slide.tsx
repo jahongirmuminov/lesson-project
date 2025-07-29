@@ -1,5 +1,6 @@
 import type { SlideContent } from "@/types/lesson";
-import { getYouTubeEmbedUrl } from "@/utils/embedurl";
+import { getYouTubeEmbedUrl } from "@/utils/embedUrl";
+
 import { Play } from "lucide-react";
 
 interface VideoSlideProps {
