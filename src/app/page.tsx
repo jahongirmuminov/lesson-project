@@ -11,7 +11,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { LessonContentHeader } from "@/components/lesson-content-header";
 
 export default function LessonPage() {
-  const [currentSlideId, setCurrentSlideId] = useState(1); // Start with theory slide like in image
+  const [currentSlideId, setCurrentSlideId] = useState(1);
   const [activeTab, setActiveTab] = useState("main");
 
   const currentSlide = lessonData.find((slide) => slide.id === currentSlideId);
@@ -62,7 +62,12 @@ export default function LessonPage() {
       case "theory":
         return <TheorySlide content={currentSlide.content} />;
       case "video":
-        return <VideoSlide content={currentSlide.content} />;
+        return (
+          <VideoSlide
+            content={currentSlide.content}
+            url={currentSlide.content.videoUrl}
+          />
+        );
       case "test":
         return <TaskSlide content={currentSlide.content} />;
       case "presentation":
@@ -113,7 +118,6 @@ export default function LessonPage() {
             onSlideSelect={setCurrentSlideId}
           />
 
-          {/* Content Area */}
           <div className="flex-1   ml-5 flex flex-col overflow-hidden">
             {/* Content Header */}
             <LessonContentHeader

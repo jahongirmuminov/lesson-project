@@ -20,7 +20,6 @@ export function TaskSlide({ content }: TaskSlideProps) {
 
   return (
     <div className="flex gap-6 h-full">
-      {/* Left Column - Task Description */}
       <div className="flex-1 space-y-6">
         <div className="flex items-center gap-3">
           <h1 className="text-xl font-semibold text-gray-900">
@@ -30,7 +29,6 @@ export function TaskSlide({ content }: TaskSlideProps) {
           <Star className="w-5 h-5 text-yellow-400 fill-current" />
         </div>
 
-        {/* Sections */}
         {content.sections &&
           content.sections.map((section, index) => (
             <div key={index} className="space-y-3">
@@ -43,7 +41,6 @@ export function TaskSlide({ content }: TaskSlideProps) {
             </div>
           ))}
 
-        {/* Examples */}
         {content.examples && content.examples.length > 0 && (
           <div className="space-y-4">
             <h2 className="text-base font-semibold text-gray-900">Примеры</h2>
@@ -80,7 +77,6 @@ export function TaskSlide({ content }: TaskSlideProps) {
           </div>
         )}
 
-        {/* Note */}
         <div className="bg-gray-50 p-4 rounded">
           <h3 className="text-sm font-semibold text-gray-900 mb-2">
             Примечание
@@ -99,7 +95,6 @@ export function TaskSlide({ content }: TaskSlideProps) {
         </div>
       </div>
 
-      {/* Right Column - Submission */}
       <div className="w-80 space-y-4">
         <div className="bg-white border border-gray-200 rounded-lg p-4">
           <h3 className="text-base font-semibold text-gray-900 mb-4">

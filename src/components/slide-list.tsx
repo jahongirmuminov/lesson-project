@@ -177,9 +177,9 @@ export function SlideList({
                   <div>
                     {getSlideIcon(
                       slide.type,
-                      isActive
-                        ? "text-[#D2D7DB] w-[25px] h-[25px]"
-                        : "text-[#D2D7DB] w-[25px] h-[25px]"
+                      `${
+                        isActive ? "text-[#D2D7DB]  " : "text-[#D2D7DB] "
+                      } w-[34px] h-[34px]`
                     )}
                   </div>
                 </div>
