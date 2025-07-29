@@ -1,103 +1,162 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useState } from "react";
+import { lessonData } from "@/data/lesson-data";
+import { SlideList } from "@/components/slide-list";
+import { TaskSlide } from "@/components/task-slide";
+import { TheorySlide } from "@/components/theory-slide";
+import { VideoSlide } from "@/components/video-slide";
+
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { LessonContentHeader } from "@/components/lesson-content-header";
+
+export default function LessonPage() {
+  const [currentSlideId, setCurrentSlideId] = useState(1); // Start with theory slide like in image
+  const [activeTab, setActiveTab] = useState("main");
+
+  const currentSlide = lessonData.find((slide) => slide.id === currentSlideId);
+
+  const currentSlideIndex = lessonData.findIndex(
+    (slide) => slide.id === currentSlideId
+  );
+
+  const handlePrevious = () => {
+    if (currentSlideIndex > 0) {
+      setCurrentSlideId(lessonData[currentSlideIndex - 1].id);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentSlideIndex < lessonData.length - 1) {
+      setCurrentSlideId(lessonData[currentSlideIndex + 1].id);
+    }
+  };
+
+  const getSlideTypeLabel = (
+    type: "task" | "theory" | "video" | "test" | "presentation"
+  ) => {
+    switch (type) {
+      case "task":
+        return "Задача";
+      case "theory":
+        return "Теория";
+      case "video":
+        return "Видео";
+      case "test":
+        return "Тест";
+      case "presentation":
+        return "Презентация";
+      default:
+        return "";
+    }
+  };
+
+  if (!currentSlide) {
+    return <div>Слайд не найден</div>;
+  }
+
+  const renderSlideContent = () => {
+    switch (currentSlide.type) {
+      case "task":
+        return <TaskSlide content={currentSlide.content} />;
+      case "theory":
+        return <TheorySlide content={currentSlide.content} />;
+      case "video":
+        return <VideoSlide content={currentSlide.content} />;
+      case "test":
+        return <TaskSlide content={currentSlide.content} />;
+      case "presentation":
+        return <TheorySlide content={currentSlide.content} />;
+      default:
+        return <div>Неизвестный тип слайда</div>;
+    }
+  };
+
+  const tabs = [
+    { id: "main", label: "Главная слайда" },
+    { id: "tasks", label: "Задачи урока" },
+    { id: "results", label: "Результаты" },
+    { id: "sent", label: "Послали" },
+    { id: "stats", label: "Статистика" },
+  ];
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="h-screen flex flex-col bg-[#F0F1F2]">
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="w-full flex flex-col h-full"
+      >
+        <div className="flex w-full bg-white">
+          <TabsList className="bg-white border-b border-gray-200 rounded-none h-auto p-0 justify-start">
+            {tabs.map((tab) => (
+              <TabsTrigger
+                key={tab.id}
+                value={tab.id}
+                className="px-6 py-4 text-sm  font-medium outline-none  !border-b-2 border-transparent data-[state=active]:border-b-blue-600 data-[state=active]:text-blue-600 data-[state=active]:bg-blue-50 data-[state=active]:shadow-none rounded-none transition-colors hover:text-gray-700  hover:cursor-pointer hover:bg-gray-100"
+              >
+                {tab.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+
+        {/* Main Content - Now correctly inside TabsContent */}
+        <TabsContent
+          value="main"
+          className="flex-1m  flex overflow-hidden mt-2 w-full"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+          {/* Slide List Sidebar */}
+          <SlideList
+            slides={lessonData}
+            currentSlideId={currentSlideId}
+            onSlideSelect={setCurrentSlideId}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+
+          {/* Content Area */}
+          <div className="flex-1   ml-5 flex flex-col overflow-hidden">
+            {/* Content Header */}
+            <LessonContentHeader
+              currentSlideNumber={currentSlideId}
+              currentSlideTypeLabel={getSlideTypeLabel(currentSlide.type)}
+              currentSlideTitle={currentSlide.content.title}
+              onPrevious={handlePrevious}
+              onNext={handleNext}
+              isPreviousDisabled={currentSlideIndex === 0}
+              isNextDisabled={currentSlideIndex === lessonData.length - 1}
+            />
+
+            {/* Content */}
+            <div className="flex-1 overflow-y-auto  bg-white">
+              <div className="p-6">{renderSlideContent()}</div>
+            </div>
+          </div>
+        </TabsContent>
+        <TabsContent
+          value="tasks"
+          className="flex-1 flex overflow-hidden mt-0 w-full p-6"
         >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+          <div className="text-gray-700">Задачи урока контент будет здесь.</div>
+        </TabsContent>
+        <TabsContent
+          value="results"
+          className="flex-1 flex overflow-hidden mt-0 w-full p-6"
         >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <div className="text-gray-700">Результаты контент будет здесь.</div>
+        </TabsContent>
+        <TabsContent
+          value="sent"
+          className="flex-1 flex overflow-hidden mt-0 w-full p-6"
+        >
+          <div className="text-gray-700">Послали контент будет здесь.</div>
+        </TabsContent>
+        <TabsContent
+          value="stats"
+          className="flex-1 flex overflow-hidden mt-0 w-full p-6"
+        >
+          <div className="text-gray-700">Статистика контент будет здесь.</div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
